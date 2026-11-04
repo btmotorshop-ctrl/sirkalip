@@ -1,0 +1,9 @@
+---
+deployment:
+  tasks:
+    # Hedef: sitenin yayın kök dizini. Eğer siteniz public_html altında bir
+    # alt klasörde yayınlanıyorsa (ör. public_html/sirkalip), bu satırı ona göre değiştirin.
+    - export DEPLOYPATH=/home/sirkalip/public_html
+    # Takip edilen dosyaları yayın dizinine kopyala.
+    # /bin/cp -R üzerine yazar ama sunucudaki fazladan dosyaları (config.php, uploads/) SİLMEZ.
+    - /bin/cp -R index.php .htaccess app assets admin lang pages views .well-known $DEPLOYPATH/

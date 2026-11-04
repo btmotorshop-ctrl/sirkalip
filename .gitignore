@@ -1,0 +1,28 @@
+# ---- Sunucuya özel / sırlar (repoya ASLA girmez) ----
+# config.php düz metin veritabanı şifresi içerir; sunucudaki dosya olduğu gibi kalır.
+config.php
+.user.ini
+error_log
+*.log
+
+# ---- Büyük / sunucuya ait içerik ----
+# Kullanıcı yüklemeleri sunucuda durur, git ile taşınmaz.
+/uploads/
+*.zip
+
+# ---- Yerel geliştirme, yedekler, çöp klasörler ----
+/yerel/
+/install/
+/sirkalip/
+/Yeni klasör (3)/
+*.bak
+*.bak2
+*.bak3
+*.orijinal
+*.done
+
+# ---- IDE / İşletim sistemi ----
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/

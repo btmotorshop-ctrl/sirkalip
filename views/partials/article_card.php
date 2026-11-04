@@ -1,0 +1,4 @@
+<a href="<?= url('/teknik-bilgiler/' . $a['slug']) ?>" class="group flex flex-col overflow-hidden rounded-xl border border-line bg-white transition hover:shadow-lg">
+  <?php if ($a['image']): ?><img src="<?= e(media_url($a['image'])) ?>" alt="" class="aspect-video w-full object-cover"><?php else: ?><div class="flex aspect-video items-center justify-center bg-gradient-to-br from-ink to-ink-2"><?= icon('wrench', 'h-12 w-12 text-accent', 1.5) ?></div><?php endif; ?>
+  <div class="flex flex-1 flex-col p-5"><div class="text-xs font-semibold text-muted"><?= date('d.m.Y', strtotime($a['created_at'])) ?></div><h3 class="mt-1 font-extrabold group-hover:text-brand"><?= e(tr_field($a, 'title')) ?></h3><p class="mt-2 line-clamp-3 text-sm text-muted"><?= e(mb_substr(trim(strip_tags((string)tr_field($a, 'content'))), 0, 160)) ?></p><span class="mt-auto pt-3 text-sm font-bold text-brand"><?= L('Devamını oku ›', 'Read more ›') ?></span></div>
+</a>

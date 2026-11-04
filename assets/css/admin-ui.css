@@ -1,0 +1,84 @@
+/* SIR KALIP – Yönetim Paneli arayüzü (sol menülü yerleşim + genel cilalama)
+   Yalnızca body.admin-ui altında geçerlidir. Orijinal görünüm için layout_top.php yedeğine bakın. */
+:root{--ui-side:#14203b;--ui-side2:#1b2a4e;--ui-brand:#e30613;--ui-ink:#172033;--ui-mut:#6b7689;--ui-line:#e4e8ef;--ui-bg:#f2f4f8;--ui-w:264px}
+body.admin-ui{margin:0;background:var(--ui-bg);color:var(--ui-ink);font-family:"Inter","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased}
+
+/* ---- Sol menü ---- */
+.ui-side{position:fixed;inset:0 auto 0 0;width:var(--ui-w);background:linear-gradient(180deg,var(--ui-side) 0%,var(--ui-side2) 100%);color:#fff;display:flex;flex-direction:column;z-index:60;transition:transform .22s ease}
+.ui-brand{display:flex;align-items:center;gap:10px;padding:16px 18px 12px;text-decoration:none;color:#fff}
+.ui-brand img{height:38px;width:auto;background:#fff;border-radius:8px;padding:4px 6px}
+.ui-brand span{font-size:10px;font-weight:700;letter-spacing:.14em;color:rgba(255,255,255,.6)}
+.ui-search{margin:4px 14px 10px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:0 10px;height:38px;color:rgba(255,255,255,.7)}
+.ui-search:focus-within{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.35)}
+.ui-search input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#fff;font-size:13px}
+.ui-search input::placeholder{color:rgba(255,255,255,.55)}
+.ui-search input::-webkit-search-cancel-button{display:none}
+.ui-search kbd{font:600 10px "Inter",sans-serif;border:1px solid rgba(255,255,255,.25);border-radius:5px;padding:1px 5px;color:rgba(255,255,255,.55)}
+.ui-nav{flex:1;overflow-y:auto;padding:2px 10px 12px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.25) transparent}
+.ui-nav::-webkit-scrollbar{width:6px}.ui-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:6px}
+.ui-item,.ui-head{display:flex;align-items:center;gap:11px;width:100%;padding:9px 12px;border:0;border-radius:9px;background:transparent;color:rgba(255,255,255,.86);font:600 13.5px "Inter",sans-serif;text-align:left;cursor:pointer;text-decoration:none;transition:background .15s,color .15s}
+.ui-item svg,.ui-head svg{flex:none;opacity:.8}
+.ui-item:hover,.ui-head:hover{background:rgba(255,255,255,.08);color:#fff}
+.ui-item.is-on,.ui-head.is-on{background:rgba(255,255,255,.13);color:#fff}
+.ui-item.is-on svg,.ui-head.is-on svg{opacity:1}
+.ui-head span{flex:1}
+.ui-chev{transition:transform .2s}
+.ui-group.is-open>.ui-head .ui-chev{transform:rotate(180deg)}
+.ui-group{margin-top:2px}
+.ui-sub{display:none;margin:2px 0 6px 21px;padding-left:12px;border-left:1px solid rgba(255,255,255,.14)}
+.ui-group.is-open>.ui-sub{display:block}
+.ui-link{display:block;padding:6px 10px;border-radius:7px;color:rgba(255,255,255,.68);font-size:13px;font-weight:500;text-decoration:none;transition:background .12s,color .12s}
+.ui-link:hover{background:rgba(255,255,255,.08);color:#fff}
+.ui-link.is-on{color:#fff;font-weight:700;background:rgba(227,6,19,.28);box-shadow:inset 2px 0 0 var(--ui-brand)}
+.ui-empty{display:none;padding:18px 12px;color:rgba(255,255,255,.55);font-size:13px;text-align:center}
+.ui-foot{border-top:1px solid rgba(255,255,255,.12);padding:10px;display:grid;gap:2px}
+.ui-foot a{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.75);font-size:13px;font-weight:600;text-decoration:none}
+.ui-foot a:hover{background:rgba(255,255,255,.08);color:#fff}
+
+/* ---- Üst çubuk ve içerik ---- */
+.ui-wrap{margin-left:var(--ui-w);min-height:100vh;display:flex;flex-direction:column}
+.ui-top{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:14px;height:58px;padding:0 24px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--ui-line)}
+.ui-top-title{font-size:15px;font-weight:700;color:var(--ui-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ui-top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.ui-btn-primary{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:9px;background:var(--ui-brand);color:#fff;font-weight:700;font-size:13px;text-decoration:none}
+.ui-btn-primary:hover{filter:brightness(.93)}
+.ui-iconbtn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:#f1f3f7;color:var(--ui-ink)}
+.ui-iconbtn:hover{background:#e7eaf1}
+.ui-burger{display:none;align-items:center;justify-content:center;width:38px;height:38px;border:0;border-radius:9px;background:#f1f3f7;color:var(--ui-ink);cursor:pointer}
+.ui-user{position:relative}
+.ui-avatar{width:36px;height:36px;border:0;border-radius:50%;background:var(--ui-side2);color:#fff;font-weight:800;font-size:14px;cursor:pointer}
+.ui-user-menu{display:none;position:absolute;right:0;top:44px;width:230px;background:#fff;border:1px solid var(--ui-line);border-radius:12px;box-shadow:0 12px 32px rgba(15,23,42,.14);padding:6px;z-index:70}
+.ui-user.is-open .ui-user-menu{display:block}
+.ui-user-info{padding:8px 10px 10px;border-bottom:1px solid var(--ui-line);margin-bottom:4px;display:grid}
+.ui-user-info span{font-size:12px;color:var(--ui-mut);overflow:hidden;text-overflow:ellipsis}
+.ui-user-menu a{display:block;padding:8px 10px;border-radius:8px;font-size:13px;font-weight:600;color:var(--ui-ink);text-decoration:none}
+.ui-user-menu a:hover{background:#f3f5f9}
+.ui-user-menu a.is-danger{color:var(--ui-brand)}
+.ui-main{flex:1;padding:22px 24px 60px;max-width:1700px;width:100%;box-sizing:border-box}
+.ui-overlay{display:none;position:fixed;inset:0;background:rgba(10,16,32,.5);z-index:55}
+
+/* ---- Ortak bileşenlerin cilası ---- */
+.admin-ui .acard{border-color:var(--ui-line);border-radius:14px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.admin-ui .atable th{background:#f7f8fb;color:#58637a;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em}
+.admin-ui .atable td{border-color:#eef0f5}
+.admin-ui .atable tbody tr:hover td{background:#f8fafd}
+.admin-ui .ainput{height:40px;border-radius:9px;border-color:#d9dee8;transition:border-color .15s,box-shadow .15s}
+.admin-ui .ainput:focus{border-color:var(--ui-brand);box-shadow:0 0 0 3px rgba(227,6,19,.12);outline:0}
+.admin-ui .abtn{border-radius:9px;border-color:#d9dee8}
+.admin-ui .abtn-primary{border-radius:9px}
+.admin-ui .alabel{font-size:12px;font-weight:600;color:#475068;margin-bottom:4px}
+.admin-ui h1{letter-spacing:-.01em}
+.admin-ui ::selection{background:rgba(227,6,19,.18)}
+
+/* ---- Mobil / dar ekran ---- */
+@media (max-width:1024px){
+  .ui-side{transform:translateX(-100%);box-shadow:0 0 40px rgba(0,0,0,.4)}
+  body.ui-open .ui-side{transform:none}
+  body.ui-open .ui-overlay{display:block}
+  .ui-wrap{margin-left:0}
+  .ui-burger{display:inline-flex}
+  .ui-top{padding:0 14px}
+  .ui-main{padding:16px 14px 50px}
+  .ui-btn-primary span{display:none}
+  .ui-btn-primary{padding:0 10px}
+}
