@@ -3,11 +3,12 @@ $g = setting('general', []); $wa = setting('whatsapp', []);
 $errors = []; $d = $_POST; $sent = false;
 if (is_post()) {
     if (!csrf_ok()) $errors['_'] = L('Oturum süresi doldu.', 'Session expired.');
-    if (!empty($d['website'])) $errors['_'] = 'spam';
+    $spam = !empty($d['website']);
     foreach (['name' => L('Ad soyad', 'Name'), 'email' => 'E-posta', 'message' => L('Mesaj', 'Message')] as $k => $l) if (trim($d[$k] ?? '') === '') $errors[$k] = $l . ' ' . L('zorunludur', 'is required');
     if (!empty($d['email']) && !filter_var($d['email'], FILTER_VALIDATE_EMAIL)) $errors['email'] = L('Geçerli bir e-posta girin', 'Invalid email');
     if (!$errors) {
-        db()->prepare('INSERT INTO contact_messages (name, email, phone, subject, message) VALUES (?,?,?,?,?)')->execute([trim($d['name']), trim($d['email']), trim($d['phone'] ?? ''), trim($d['subject'] ?? ''), trim($d['message'])]);
+        $isSpam = ($spam || contact_is_spam(trim($d['name']), trim($d['email']), trim($d['message']))) ? 1 : 0;
+        db()->prepare('INSERT INTO contact_messages (name, email, phone, subject, message, is_spam) VALUES (?,?,?,?,?,?)')->execute([trim($d['name']), trim($d['email']), trim($d['phone'] ?? ''), trim($d['subject'] ?? ''), trim($d['message']), $isSpam]);
         flash_msg(L('Mesajınız alındı. En kısa sürede size dönüş yapacağız.', 'Message received. We will get back to you soon.'));
         go(url('/iletisim'));
     }

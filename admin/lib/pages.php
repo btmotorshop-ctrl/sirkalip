@@ -71,7 +71,7 @@ function page_dashboard(): void
         (SELECT COUNT(*) FROM users WHERE role='customer') members,
         (SELECT COUNT(*) FROM questions WHERE answer IS NULL) q_wait,
         (SELECT COUNT(*) FROM reviews WHERE is_approved = 0) r_wait,
-        (SELECT COUNT(*) FROM contact_messages WHERE is_read = 0) m_wait,
+        (SELECT COUNT(*) FROM contact_messages WHERE is_read = 0 AND is_spam = 0) m_wait,
         (SELECT COUNT(*) FROM transfer_notices WHERE is_approved = 0) t_wait,
         (SELECT COUNT(*) FROM return_requests WHERE status = 'pending') ret_wait,
         (SELECT COUNT(*) FROM orders WHERE payment_status = 'waiting' AND status <> 'cancelled' AND deleted_at IS NULL) pay_wait,

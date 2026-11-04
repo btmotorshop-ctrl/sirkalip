@@ -55,6 +55,7 @@ function run_migrations(): void
                     KEY vl_product (product_id),
                     KEY vl_page_type (page_type)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"],   // Detaylı ziyaretçi takip tablosu
+        26 => ["ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS is_spam TINYINT(1) NOT NULL DEFAULT 0"],   // İletişim formu: spam/bot işareti
     ];
     $done = $v;
     foreach ($migrations as $ver => $stmts) {

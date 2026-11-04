@@ -100,6 +100,22 @@ function money($v): string
     return number_format((float)$v, 2, locale() === 'tr' ? ',' : '.', locale() === 'tr' ? '.' : ',') . ' TL';
 }
 
+/** İletişim formu spam/bot tespiti (basit puanlama; eşik 3). Şüpheliyi spam kutusuna düşürür. */
+function contact_is_spam(string $name, string $email, string $message): bool
+{
+    $hay = function_exists('mb_strtolower') ? mb_strtolower($name . ' ' . $message, 'UTF-8') : strtolower($name . ' ' . $message);
+    $score = 0;
+    $links = preg_match_all('#https?://|www\.|\.com|\.ru\b|\.xyz\b|\.online\b|\.site\b|\.top\b|\.icu\b#i', $message);
+    if ($links >= 1) $score += 2;
+    if ($links >= 3) $score += 2;
+    if (preg_match('#https?://|www\.#i', $name . ' ' . $email)) $score += 3;
+    foreach (['seo', 'backlink', 'back link', 'link building', 'ranking', 'rank your', 'rank higher', 'search index', 'google search', 'search engine', 'first page of google', 'traffic to your', 'web design', 'web development', 'website design', 'digital marketing', 'marketing team', 'increase your', 'boost your', 'grow your', 'guest post', 'crypto', 'bitcoin', 'forex', 'casino', 'payday', 'investment opportunity', 'business proposal', 'reach out', 'outreach', 'i came across', 'promote your', 'advertising services'] as $w)
+        if (strpos($hay, $w) !== false) $score += 2;
+    $msgLen = function_exists('mb_strlen') ? mb_strlen($message) : strlen($message);
+    if ($links >= 1 && !preg_match('/[çğıöşüÇĞİÖŞÜ]/u', $message) && $msgLen > 120) $score += 1;
+    return $score >= 3;
+}
+
 /** Basit HTTP GET (cURL varsa onu, yoksa file_get_contents kullanır). */
 function fx_http_get(string $url): string
 {
