@@ -56,6 +56,13 @@ function run_migrations(): void
                     KEY vl_page_type (page_type)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"],   // Detaylı ziyaretçi takip tablosu
         26 => ["ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS is_spam TINYINT(1) NOT NULL DEFAULT 0"],   // İletişim formu: spam/bot işareti
+        27 => [   // Yeni ürün kategorileri (varsa dokunmaz)
+            "INSERT INTO categories (slug, name_tr, desc_tr, icon, sort_order, is_active) VALUES ('tabla-tupleri', 'Tabla Tüpleri', 'Balya makinesi tabla tüpleri ve akümülatörler', 'box', 50, 1) ON DUPLICATE KEY UPDATE name_tr = name_tr",
+            "INSERT INTO categories (slug, name_tr, desc_tr, icon, sort_order, is_active) VALUES ('saft-catal-istavroz-aksami', 'Şaft Çatal İstavroz Aksamı', 'Şaft, çatal ve istavroz aksamı', 'link2', 51, 1) ON DUPLICATE KEY UPDATE name_tr = name_tr",
+            "INSERT INTO categories (slug, name_tr, desc_tr, icon, sort_order, is_active) VALUES ('zincir-aksami', 'Zincir Aksamı', 'Zincir ve zincir aksamı', 'settings2', 52, 1) ON DUPLICATE KEY UPDATE name_tr = name_tr",
+            "INSERT INTO categories (slug, name_tr, desc_tr, icon, sort_order, is_active) VALUES ('burc-aksami', 'Burç Aksamı', 'Gallignani burç aksamı', 'circle-dot', 53, 1) ON DUPLICATE KEY UPDATE name_tr = name_tr",
+            "INSERT INTO categories (slug, name_tr, desc_tr, icon, sort_order, is_active) VALUES ('muhtelif-parcalar', 'Muhtelif Parçalar', 'Muhtelif yedek parçalar', 'puzzle', 54, 1) ON DUPLICATE KEY UPDATE name_tr = name_tr",
+        ],
     ];
     $done = $v;
     foreach ($migrations as $ver => $stmts) {
