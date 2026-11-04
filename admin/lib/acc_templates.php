@@ -58,7 +58,7 @@ function acct_meta(): array
             'price_mode' => ['Fiyat türü', ['disc' => 'İndirimli fiyat görünsün', 'list' => 'Liste fiyatı görünsün', 'both' => 'Liste ve indirimli fiyat görünsün'], 'list'],
             'col_vat' => ['KDV oranı', ['1' => 'Satırlarda KDV oranı görünsün', '0' => 'Satırlarda KDV oranı görünmesin'], '1'],
             'col_total' => ['Satır tutarı', ['1' => 'Satırlarda toplam tutar görünsün', '0' => 'Satırlarda toplam tutar görünmesin'], '1'],
-            'col_image' => ['Ürün resmi', ['1' => 'Satırlarda ürün resmi görünsün', '0' => 'Satırlarda ürün resmi görünmesin'], '0'],
+            'col_image' => ['Ürün resmi', ['1' => 'Satırlarda ürün resmi görünsün', '0' => 'Satırlarda ürün resmi görünmesin'], '1'],
             'col_code' => ['Ürün kodu', ['1' => 'Satırlarda ürün kodu görünsün', '0' => 'Satırlarda ürün kodu görünmesin'], '1'],
             'col_barcode' => ['Barkod', ['0' => 'Barkod görünmesin', '1' => 'Barkod rakamı görünsün'], '0'],
         ],
