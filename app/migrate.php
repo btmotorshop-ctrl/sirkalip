@@ -64,6 +64,7 @@ function run_migrations(): void
             "INSERT INTO categories (slug, name_tr, desc_tr, icon, sort_order, is_active) VALUES ('muhtelif-parcalar', 'Muhtelif Parçalar', 'Muhtelif yedek parçalar', 'puzzle', 54, 1) ON DUPLICATE KEY UPDATE name_tr = name_tr",
         ],
         28 => ['seed_new_products_2026'],   // Tabla Tüpleri + Muhtelif Parçalar ürünleri
+        29 => ['seed_zincir_2026'],   // Zincir Aksamı ürünleri
     ];
     $done = $v;
     foreach ($migrations as $ver => $stmts) {
@@ -591,4 +592,57 @@ function seed_new_products_2026(): void
             error_log('seed_new_products_2026 ' . $code . ': ' . $e->getMessage());
         }
     }
+}
+
+/** Ürün satırlarını ekleyen ortak yardımcı. Satır: [code, name_tr, category_slug, brand_slug, price_TL, short_desc_tr]. Kodu olan atlanır. */
+function sk_seed_products(array $items): void
+{
+    $pdo = db();
+    $cat = $pdo->query("SELECT slug, id FROM categories")->fetchAll(PDO::FETCH_KEY_PAIR);
+    $brand = $pdo->query("SELECT slug, id FROM brands")->fetchAll(PDO::FETCH_KEY_PAIR);
+    $slugify = function (string $s): string {
+        $s = mb_strtolower(str_replace(['İ', 'I'], ['i', 'ı'], $s), 'UTF-8');
+        $s = strtr($s, ['ç' => 'c', 'ğ' => 'g', 'ı' => 'i', 'ö' => 'o', 'ş' => 's', 'ü' => 'u', 'â' => 'a', 'î' => 'i', 'û' => 'u']);
+        return trim(preg_replace('/[^a-z0-9]+/', '-', $s), '-');
+    };
+    $has = $pdo->prepare('SELECT 1 FROM products WHERE code = ?');
+    $ins = $pdo->prepare('INSERT INTO products (code, name_tr, slug, category_id, brand_id, price, stock, vat_rate, short_desc_tr, is_active, published_at) VALUES (?,?,?,?,?,?,0,20,?,1,NOW())');
+    foreach ($items as [$code, $name, $cslug, $bslug, $price, $sd]) {
+        try {
+            if (empty($cat[$cslug])) continue;
+            $has->execute([$code]);
+            if ($has->fetchColumn()) continue;
+            $ins->execute([$code, $name, $slugify($name . '-' . $code), $cat[$cslug], ($bslug && isset($brand[$bslug])) ? $brand[$bslug] : null, $price, $sd]);
+        } catch (Throwable $e) {
+            error_log('sk_seed_products ' . $code . ': ' . $e->getMessage());
+        }
+    }
+}
+
+/** Zincir Aksamı ürünleri ($ ve € fiyatlar TL'ye çevrilmiştir: USD=41,20 / EUR=48,10). */
+function seed_zincir_2026(): void
+{
+    sk_seed_products([
+        ['AS90407', 'ASA 40 Zincir (Eterno)', 'zincir-aksami', '', 385.22, null],
+        ['AS90408', 'ASA 50 Zincir (Eterno)', 'zincir-aksami', '', 453.20, null],
+        ['AS90409', 'ASA 60 Zincir (Eterno)', 'zincir-aksami', '', 679.80, null],
+        ['AS90426', 'ASA 60H Takviyeli Zincir (Eterno)', 'zincir-aksami', '', 1030.00, null],
+        ['AS90411', 'ASA 2040 Zincir (Eterno)', 'zincir-aksami', '', 362.56, null],
+        ['AS90412', 'ASA 2050 Zincir (Eterno)', 'zincir-aksami', '', 473.80, null],
+        ['AS90408A', 'ASA 50 Zincir (SKF)', 'zincir-aksami', '', 680.62, null],
+        ['AS90409A', 'ASA 60 Zincir (SKF)', 'zincir-aksami', '', 974.03, null],
+        ['AS90426A', 'ASA 60H Zincir (SKF)', 'zincir-aksami', '', 1361.23, null],
+        ['AS90412A', 'ASA 2050 Zincir (SKF)', 'zincir-aksami', '', 702.26, null],
+        ['AS90413', 'ASA 40 Zincir Kilidi (Eterno)', 'zincir-aksami', '', 49.44, null],
+        ['AS90414', 'ASA 50 Zincir Kilidi (Eterno)', 'zincir-aksami', '', 49.44, null],
+        ['AS90415', 'ASA 60 Zincir Kilidi (Eterno)', 'zincir-aksami', '', 49.44, null],
+        ['AS90415A', 'ASA 60H Zincir Kilidi (Eterno)', 'zincir-aksami', '', 61.80, null],
+        ['AS90417', 'ASA 2040 Zincir Kilidi (Eterno)', 'zincir-aksami', '', 49.44, null],
+        ['AS90418', 'ASA 2050 Zincir Kilidi (Eterno)', 'zincir-aksami', '', 57.68, null],
+        ['AS90419', 'ASA 40 Yarım Ek (Eterno)', 'zincir-aksami', '', 49.44, null],
+        ['AS90420', 'ASA 50 Yarım Ek (Eterno)', 'zincir-aksami', '', 61.80, null],
+        ['AS90421', 'ASA 60 Yarım Ek (Eterno)', 'zincir-aksami', '', 103.00, null],
+        ['AS90423', 'ASA 2040 Yarım Ek (Eterno)', 'zincir-aksami', '', 103.00, null],
+        ['AS90424', 'ASA 2050 Yarım Ek (Eterno)', 'zincir-aksami', '', 113.30, null],
+    ]);
 }
