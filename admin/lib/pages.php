@@ -235,7 +235,12 @@ function page_product_form(?int $id): void
                         if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif', 'mp4'], true)) continue;
                         $name = $data['slug'] . '-' . bin2hex(random_bytes(3)) . '.' . $ext;
                         move_uploaded_file($_FILES['upload']['tmp_name'][$i], "$dir/$name");
-                        $pdo->prepare('INSERT INTO product_images (product_id, url, kind, is_main, sort_order) VALUES (?,?,?,?,?)')->execute([$id, base_path() . '/uploads/products/' . $name, $ext === 'mp4' ? 'video' : 'photo', $n === 0 && $i === 0 ? 1 : 0, $n + $i]);
+                        $url = base_path() . '/uploads/products/' . $name;
+                        if (!in_array($ext, ['mp4', 'gif'], true)) {   // fotoğrafı SIR KALIP marka çerçevesine otur
+                            $framed = $data['slug'] . '-' . bin2hex(random_bytes(3)) . '.jpg';
+                            if (sk_frame_image("$dir/$name", "$dir/$framed")) { @unlink("$dir/$name"); $url = base_path() . '/uploads/products/' . $framed; }
+                        }
+                        $pdo->prepare('INSERT INTO product_images (product_id, url, kind, is_main, sort_order) VALUES (?,?,?,?,?)')->execute([$id, $url, $ext === 'mp4' ? 'video' : 'photo', $n === 0 && $i === 0 ? 1 : 0, $n + $i]);
                     }
                 }
                 $pdo->commit();

@@ -100,6 +100,40 @@ function money($v): string
     return number_format((float)$v, 2, locale() === 'tr' ? ',' : '.', locale() === 'tr' ? '.' : ',') . ' TL';
 }
 
+/** Yüklenen ürün fotoğrafını SIR KALIP marka çerçevesinin (assets/img/urun-cerceve.png) üzerine ortalayıp JPG kaydeder. */
+function sk_frame_image(string $src, string $dest): bool
+{
+    if (!function_exists('imagecreatetruecolor') || !function_exists('imagecopyresampled')) return false;
+    $framePath = ROOT . '/assets/img/urun-cerceve.png';
+    if (!is_file($framePath)) return false;
+    $info = @getimagesize($src);
+    if (!$info) return false;
+    switch ($info[2]) {
+        case IMAGETYPE_JPEG: $img = @imagecreatefromjpeg($src); break;
+        case IMAGETYPE_PNG:  $img = @imagecreatefrompng($src); break;
+        case IMAGETYPE_WEBP: $img = function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($src) : false; break;
+        case IMAGETYPE_GIF:  $img = @imagecreatefromgif($src); break;
+        default: $img = false;
+    }
+    if (!$img) return false;
+    $frame = @imagecreatefrompng($framePath);
+    if (!$frame) { imagedestroy($img); return false; }
+    $fw = imagesx($frame); $fh = imagesy($frame);
+    $sw = imagesx($img);  $sh = imagesy($img);
+    $maxW = (int)round($fw * 0.542);   // temiz bant genişliği (~680/1254)
+    $maxH = (int)round($fh * 0.375);   // temiz bant yüksekliği (~470/1254)
+    $scale = min($maxW / $sw, $maxH / $sh);
+    $nw = max(1, (int)round($sw * $scale));
+    $nh = max(1, (int)round($sh * $scale));
+    $dx = (int)round(($fw - $nw) / 2 + $fw * 0.024);   // yatay ortala, hafif sağa
+    $dy = (int)round($fh * 0.251);                     // logonun altı
+    imagealphablending($frame, true);
+    imagecopyresampled($frame, $img, $dx, $dy, 0, 0, $nw, $nh, $sw, $sh);
+    $ok = @imagejpeg($frame, $dest, 90);
+    imagedestroy($img); imagedestroy($frame);
+    return (bool)$ok;
+}
+
 /** İletişim formu spam/bot tespiti (basit puanlama; eşik 3). Şüpheliyi spam kutusuna düşürür. */
 function contact_is_spam(string $name, string $email, string $message): bool
 {
