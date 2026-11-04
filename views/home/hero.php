@@ -12,9 +12,9 @@ if ($heroBanners): ?>
       </a>
     <?php endforeach; ?>
     <?php if (count($heroBanners) > 1): ?>
-      <button type="button" data-hero-prev class="absolute left-3 top-1/2 hidden -translate-y-1/2 rounded-full bg-white/80 p-2 shadow hover:bg-white md:block" aria-label="Önceki"><?= icon('chevron-left', 'h-5 w-5') ?></button>
-      <button type="button" data-hero-next class="absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-full bg-white/80 p-2 shadow hover:bg-white md:block" aria-label="Sonraki"><?= icon('chevron-right', 'h-5 w-5') ?></button>
-      <div class="absolute inset-x-0 bottom-3 flex justify-center gap-2"><?php foreach ($heroBanners as $i => $bn): ?><button type="button" data-hero-dot="<?= $i ?>" class="h-2.5 rounded-full bg-white/60 transition-all <?= $i ? 'w-2.5' : 'w-7 bg-white' ?>" aria-label="Banner <?= $i + 1 ?>"></button><?php endforeach; ?></div>
+      <button type="button" data-hero-prev style="z-index:20" class="absolute left-3 top-1/2 hidden -translate-y-1/2 rounded-full bg-white/80 p-2 shadow hover:bg-white md:block" aria-label="Önceki"><?= icon('chevron-left', 'h-5 w-5') ?></button>
+      <button type="button" data-hero-next style="z-index:20" class="absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-full bg-white/80 p-2 shadow hover:bg-white md:block" aria-label="Sonraki"><?= icon('chevron-right', 'h-5 w-5') ?></button>
+      <div class="absolute inset-x-0 bottom-3 flex justify-center gap-2" style="z-index:20"><?php foreach ($heroBanners as $i => $bn): ?><button type="button" data-hero-dot="<?= $i ?>" class="h-2.5 rounded-full bg-white/60 transition-all <?= $i ? 'w-2.5' : 'w-7 bg-white' ?>" aria-label="Banner <?= $i + 1 ?>"></button><?php endforeach; ?></div>
     <?php endif; ?>
   </div>
 </section>
