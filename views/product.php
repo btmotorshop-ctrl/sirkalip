@@ -68,6 +68,7 @@ if (($ps['showQuestions'] ?? true) !== false) $tabList['qa'] = L('Soru & Cevap',
         <?php if ($old): ?><div class="pb-1 text-lg text-muted line-through"><?= money($old) ?></div><?php endif; ?>
         <div class="pb-1.5 text-xs font-semibold text-muted"><?= prices_ex_vat() ? '+ ' . L('KDV', 'VAT') : L('KDV Dahil', 'VAT incl.') ?></div>
       </div>
+      <?= price_fx($price, 'mt-1 text-sm font-semibold text-muted') ?>
       <?php if (prices_ex_vat()): ?><div class="mt-1 text-sm text-muted"><?= L('KDV dahil', 'Incl. VAT') ?>: <b class="text-ink"><?= money($price * (1 + (int)$p['vat_rate'] / 100)) ?></b> <span class="text-xs">(%<?= (int)$p['vat_rate'] ?> <?= L('KDV', 'VAT') ?>)</span></div><?php endif; ?>
       <?php $pay = setting('payment', []); if (!empty($pay['transfer']) && !empty($pay['transferDiscount'])): ?>
         <div class="mt-1 text-sm text-ok"><?= L('Havale/EFT ile', 'With bank transfer') ?> <b><?= money($price * (1 - $pay['transferDiscount'] / 100)) ?></b> (%<?= (float)$pay['transferDiscount'] ?> <?= L('indirim', 'discount') ?>)</div>

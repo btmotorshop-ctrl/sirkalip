@@ -14,6 +14,7 @@
     <span class="whitespace-nowrap text-lg font-extrabold text-brand"><?= money($price) ?></span><?= vat_tag() ?>
     <?php if ($old): ?><span class="text-xs text-muted line-through"><?= money($old) ?></span><?php endif; ?>
   </div>
+  <?= price_fx($price) ?>
   <div class="mt-0.5 text-xs font-semibold <?= $p['stock'] > 0 ? 'text-ok' : 'text-muted' ?>">● <?= $p['stock'] > 0 ? e(t('product.inStock', ['count' => $p['stock']])) : e(t('product.outOfStock')) ?></div>
   <div class="mt-auto pt-3">
   <?php if ($p['stock'] > 0): ?>

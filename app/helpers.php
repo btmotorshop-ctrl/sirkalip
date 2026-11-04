@@ -100,6 +100,67 @@ function money($v): string
     return number_format((float)$v, 2, locale() === 'tr' ? ',' : '.', locale() === 'tr' ? '.' : ',') . ' TL';
 }
 
+/** Basit HTTP GET (cURL varsa onu, yoksa file_get_contents kullanır). */
+function fx_http_get(string $url): string
+{
+    if (function_exists('curl_init')) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 4, CURLOPT_CONNECTTIMEOUT => 3, CURLOPT_FOLLOWLOCATION => true, CURLOPT_SSL_VERIFYPEER => false, CURLOPT_USERAGENT => 'sirkalip']);
+        $r = curl_exec($ch); curl_close($ch);
+        if (is_string($r) && $r !== '') return $r;
+    }
+    $ctx = stream_context_create(['http' => ['timeout' => 4, 'user_agent' => 'sirkalip'], 'ssl' => ['verify_peer' => false, 'verify_peer_name' => false]]);
+    $r = @file_get_contents($url, false, $ctx);
+    return is_string($r) ? $r : '';
+}
+
+/** TCMB efektif satış kurlarını günde bir kez çeker ve currency_rates tablosunu günceller. */
+function fx_auto_refresh(): void
+{
+    static $done = false; if ($done) return; $done = true;
+    try {
+        $last = db()->query("SELECT MAX(DATE(updated_at)) FROM currency_rates WHERE code IN ('EUR','USD')")->fetchColumn();
+        if ($last === date('Y-m-d')) return;                  // bugün zaten güncellenmiş
+        // Aynı gün tekrar tekrar denememek için önce zaman damgasını güncelle
+        db()->exec("UPDATE currency_rates SET updated_at = NOW() WHERE code IN ('EUR','USD')");
+        $xml = fx_http_get('https://www.tcmb.gov.tr/kurlar/today.xml');
+        if ($xml === '') return;
+        $doc = @simplexml_load_string($xml);
+        if (!$doc) return;
+        foreach ($doc->Currency as $c) {
+            $code = (string)$c['CurrencyCode'];
+            if ($code !== 'USD' && $code !== 'EUR') continue;
+            $sell = (float)str_replace(',', '.', (string)$c->BanknoteSelling);   // efektif satış
+            if ($sell <= 0) $sell = (float)str_replace(',', '.', (string)$c->ForexSelling);
+            if ($sell > 0) db()->prepare('UPDATE currency_rates SET rate = ? WHERE code = ?')->execute([$sell, $code]);
+        }
+    } catch (Throwable $e) { /* kur güncellenemezse mevcut değerler kullanılır */ }
+}
+
+/** EUR/USD kurları (1 birim = ? TL), currency_rates tablosundan. */
+function fx_rates(): array
+{
+    static $r = null;
+    if ($r !== null) return $r;
+    fx_auto_refresh();
+    $r = ['EUR' => 0.0, 'USD' => 0.0];
+    try {
+        foreach (db()->query("SELECT code, rate FROM currency_rates WHERE code IN ('EUR','USD')") as $row)
+            $r[$row['code']] = (float)$row['rate'];
+    } catch (Throwable $e) {}
+    return $r;
+}
+
+/** TL fiyatın €/$ karşılığı (ikincil, küçük gösterim). Kur yoksa boş döner. */
+function price_fx($tl, string $cls = 'mt-0.5 text-xs font-semibold text-muted'): string
+{
+    $tl = (float)$tl; if ($tl <= 0) return '';
+    $fx = fx_rates(); $out = [];
+    if (!empty($fx['EUR'])) $out[] = '€' . number_format($tl / $fx['EUR'], 2, ',', '.');
+    if (!empty($fx['USD'])) $out[] = '$' . number_format($tl / $fx['USD'], 2, ',', '.');
+    return $out ? '<div class="' . $cls . '">' . implode(' · ', $out) . '</div>' : '';
+}
+
 /** Lucide ikonları (inline SVG) */
 function icon(string $name, string $class = 'h-5 w-5', float $stroke = 2): string
 {
