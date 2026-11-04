@@ -63,6 +63,7 @@ function run_migrations(): void
             "INSERT INTO categories (slug, name_tr, desc_tr, icon, sort_order, is_active) VALUES ('burc-aksami', 'Burç Aksamı', 'Gallignani burç aksamı', 'circle-dot', 53, 1) ON DUPLICATE KEY UPDATE name_tr = name_tr",
             "INSERT INTO categories (slug, name_tr, desc_tr, icon, sort_order, is_active) VALUES ('muhtelif-parcalar', 'Muhtelif Parçalar', 'Muhtelif yedek parçalar', 'puzzle', 54, 1) ON DUPLICATE KEY UPDATE name_tr = name_tr",
         ],
+        28 => ['seed_new_products_2026'],   // Tabla Tüpleri + Muhtelif Parçalar ürünleri
     ];
     $done = $v;
     foreach ($migrations as $ver => $stmts) {
@@ -545,4 +546,49 @@ function acc_doc_columns(): void
     $have = $cols('acc_doc_lines');
     foreach (['unit' => "VARCHAR(10) NOT NULL DEFAULT 'Ad'", 'discount' => 'DECIMAL(14,2) NOT NULL DEFAULT 0', 'description' => 'TEXT NULL'] as $c => $d)
         if (!in_array($c, $have, true)) $pdo->exec("ALTER TABLE acc_doc_lines ADD COLUMN `$c` $d");
+}
+
+/** Yeni kategorilere ürün girişi (Tabla Tüpleri + Muhtelif Parçalar). Kodu olan atlanır; € fiyatlar TL'ye çevrilmiş haldedir. */
+function seed_new_products_2026(): void
+{
+    $pdo = db();
+    $cat = $pdo->query("SELECT slug, id FROM categories")->fetchAll(PDO::FETCH_KEY_PAIR);
+    $brand = $pdo->query("SELECT slug, id FROM brands")->fetchAll(PDO::FETCH_KEY_PAIR);
+    $slugify = function (string $s): string {
+        $s = mb_strtolower(str_replace(['İ', 'I'], ['i', 'ı'], $s), 'UTF-8');
+        $s = strtr($s, ['ç' => 'c', 'ğ' => 'g', 'ı' => 'i', 'ö' => 'o', 'ş' => 's', 'ü' => 'u', 'â' => 'a', 'î' => 'i', 'û' => 'u']);
+        return trim(preg_replace('/[^a-z0-9]+/', '-', $s), '-');
+    };
+    // [code, name_tr, category_slug, brand_slug, price_TL, short_desc_tr]
+    $items = [
+        ['AS50026', 'Tabla Tüpü 55 Bar - 0,50 Lt (New Holland)', 'tabla-tupleri', 'new-holland', 2886.00, 'Orijinal No: 80398263'],
+        ['AS50027', 'Tabla Tüpü 75 Bar - 0,50 Lt (New Holland)', 'tabla-tupleri', 'new-holland', 2886.00, 'Orijinal No: 80398269'],
+        ['AS50903', 'Tabla Tüpü 80 Bar - 0,50 Lt (New Holland)', 'tabla-tupleri', 'new-holland', 2886.00, 'Orijinal No: 84018412 / 84971563'],
+        ['AS50904', 'Tabla Tüpü 70 Bar - 0,50 Lt (New Holland)', 'tabla-tupleri', 'new-holland', 2886.00, 'Orijinal No: 84018325'],
+        ['AS50905', 'Tabla Tüpü 85 Bar - 0,50 Lt (New Holland)', 'tabla-tupleri', 'new-holland', 2886.00, 'Orijinal No: 84017606'],
+        ['AS50906', 'Tabla Tüpü 120 Bar - 0,50 Lt (New Holland)', 'tabla-tupleri', 'new-holland', 2886.00, 'Orijinal No: 84018365'],
+        ['AS50907', 'Tabla Tüpü 250 Bar - 0,15 Lt (New Holland)', 'tabla-tupleri', 'new-holland', 1924.00, 'Orijinal No: 84453641'],
+        ['AS10135', 'Tabla Tüpü 55 Bar - 0,75 Lt (John Deere)', 'tabla-tupleri', 'john-deere', 3126.50, 'Orijinal No: AZ22843'],
+        ['AS10135A', 'Tabla Tüpü 75 Bar - 0,75 Lt (John Deere)', 'tabla-tupleri', 'john-deere', 3126.50, 'Orijinal No: AZ22843'],
+        ['AMZ250047', 'Tabla Tüpü 50 Bar - 0,75 Lt (Laverda)', 'tabla-tupleri', '', 3126.50, 'Orijinal No: LA322718750'],
+        ['AMZ250369', 'Tabla Tüpü - 0,75 Lt (Laverda)', 'tabla-tupleri', '', 3126.50, 'Orijinal No: LA323634950'],
+        ['AS60628', 'Tabla Tüpü 100 Bar - 0,75 Lt (Claas)', 'tabla-tupleri', 'claas', 3126.50, 'Orijinal No: 055619.0'],
+        ['AS30883Y', 'Bağlama Üstü Kapak Fanı Yuvarlak - Orijinal', 'muhtelif-parcalar', '', 3750.00, null],
+        ['AS30883', 'Bağlama Üstü Kapak Fanı', 'muhtelif-parcalar', '', 1875.00, null],
+        ['AMZ552169', 'Pervane - K.Ertuğrul', 'muhtelif-parcalar', '', 1875.00, null],
+        ['AS30038', 'Sayaç Balya Makinesi İthal', 'muhtelif-parcalar', '', 247.20, null],
+        ['AS30040', 'Sayaç (Yeşil)', 'muhtelif-parcalar', '', 824.00, null],
+    ];
+    $has = $pdo->prepare('SELECT 1 FROM products WHERE code = ?');
+    $ins = $pdo->prepare('INSERT INTO products (code, name_tr, slug, category_id, brand_id, price, stock, vat_rate, short_desc_tr, is_active, published_at) VALUES (?,?,?,?,?,?,0,20,?,1,NOW())');
+    foreach ($items as [$code, $name, $cslug, $bslug, $price, $sd]) {
+        try {
+            if (empty($cat[$cslug])) continue;
+            $has->execute([$code]);
+            if ($has->fetchColumn()) continue;   // kod zaten varsa atla
+            $ins->execute([$code, $name, $slugify($name . '-' . $code), $cat[$cslug], ($bslug && isset($brand[$bslug])) ? $brand[$bslug] : null, $price, $sd]);
+        } catch (Throwable $e) {
+            error_log('seed_new_products_2026 ' . $code . ': ' . $e->getMessage());
+        }
+    }
 }
