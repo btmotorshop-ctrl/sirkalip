@@ -65,6 +65,8 @@ function run_migrations(): void
         ],
         28 => ['seed_new_products_2026'],   // Tabla Tüpleri + Muhtelif Parçalar ürünleri
         29 => ['seed_zincir_2026'],   // Zincir Aksamı ürünleri
+        30 => ['seed_burc_2026'],   // Burç Aksamı ürünleri (marka: Gallignani)
+        31 => ['seed_saft_2026'],   // Şaft / Çatal / İstavroz / Mafsal ürünleri
     ];
     $done = $v;
     foreach ($migrations as $ver => $stmts) {
@@ -644,5 +646,112 @@ function seed_zincir_2026(): void
         ['AS90421', 'ASA 60 Yarım Ek (Eterno)', 'zincir-aksami', '', 103.00, null],
         ['AS90423', 'ASA 2040 Yarım Ek (Eterno)', 'zincir-aksami', '', 103.00, null],
         ['AS90424', 'ASA 2050 Yarım Ek (Eterno)', 'zincir-aksami', '', 113.30, null],
+    ]);
+}
+
+/** Burç Aksamı ürünleri (marka Gallignani; fiyatlar TL - 2025 kampanya). */
+function seed_burc_2026(): void
+{
+    sk_seed_products([
+        ['AS30582', 'Beşik Kol Burcu 22X30X19,5', 'burc-aksami', 'gallignani', 145.00, 'Orijinal No: 88.80.011'],
+        ['AS30583', 'Volant Burcu', 'burc-aksami', 'gallignani', 620.00, 'Orijinal No: 88.80.053'],
+        ['AS30584', 'Piston Kol Burcu 35X43X70', 'burc-aksami', 'gallignani', 530.00, 'Orijinal No: 88.80.036'],
+        ['AS30655', 'Piston Kol Burcu 5690 - 30X40X70', 'burc-aksami', 'gallignani', 595.00, 'Orijinal No: 88.80.502'],
+        ['AS30585', 'Bağlama Dişli Burcu 30X35X35', 'burc-aksami', 'gallignani', 175.00, 'Orijinal No: 88.80.013'],
+        ['AS30586', 'Bağlama Dişli Burç 30X35X20', 'burc-aksami', 'gallignani', 145.00, 'Orijinal No: 88.80.012'],
+        ['AS30587', 'Yaba Şapkalı Pim Burcu 15X20X24', 'burc-aksami', 'gallignani', 85.00, 'Orijinal No: 88.80.006'],
+        ['AS30588', 'Yaba Parçalı Burç 35X43X50', 'burc-aksami', 'gallignani', 620.00, 'Orijinal No: 88.80.038'],
+        ['AS30589', 'Arka Yaba Dişli Burcu 40X50X19', 'burc-aksami', 'gallignani', 245.00, 'Orijinal No: 88.80.515'],
+        ['AS30593', 'Zincir Gergi Dişli ve Kasnak Burcu 20X25X22', 'burc-aksami', 'gallignani', 105.00, 'Orijinal No: 88.80.008'],
+        ['AS30594', 'Yaba Krank Şase Burcu 25X30X35', 'burc-aksami', 'gallignani', 155.00, 'Orijinal No: 88.80.500'],
+        ['AS30595', 'Burç 15X20X19,5', 'burc-aksami', 'gallignani', 75.00, 'Orijinal No: 88.80.005'],
+        ['AS30596', 'Tel Sarma Makarası Burcu 10X20X13', 'burc-aksami', 'gallignani', 80.00, 'Orijinal No: 88.80.111'],
+        ['AS30597', 'İğne Emniyet Mandal Burcu 26X30X54', 'burc-aksami', 'gallignani', 265.00, 'Orijinal No: 88.80.045'],
+        ['AS30608', 'Pikap Porya Burçu 30X35X30', 'burc-aksami', 'gallignani', 160.00, 'Orijinal No: 88.80.026'],
+        ['AS30694', '5690 Yaba Burcu 35X40X40', 'burc-aksami', 'gallignani', 345.00, 'Orijinal No: 88.80.016'],
+    ]);
+}
+
+/** Şaft / Çatal / İstavroz / Mafsal ürünleri. Şaft fiyatları TL; Mafsal/İstavroz € fiyatları TL'ye çevrilmiştir (EUR=48,10). */
+function seed_saft_2026(): void
+{
+    $C = 'saft-catal-istavroz-aksami';
+    sk_seed_products([
+        // --- ŞAFT & ÇATAL (TL) ---
+        ['AS90093', "30'luk Frezeli Uzun Şaft", $C, '', 6100.00, 'Orijinal No: 15.15.011'],
+        ['AS90094', "30'luk Kısa Sabit Şaft", $C, '', 5750.00, 'Orijinal No: 15.15.010'],
+        ['AMZ300022', "30'luk Kısa Sabit Şaft Girip Çıkmalı", $C, '', 5750.00, 'Orijinal No: 15.15.010G'],
+        ['AS90095', "27'lik Kısa Şaft", $C, '', 4000.00, 'Orijinal No: 15.15.012'],
+        ['AS90096', "27'lik Haşbay Cırcırlı Komple Şaft", $C, '', 5500.00, 'Orijinal No: 15.15.013'],
+        ['AS90098', "30'luk Şaft Borusu İç-Dış 3 Metre", $C, '', 5312.50, null],
+        ['AS90098A', "30'luk Şaft Borusu İç 3 Metre", $C, '', 2700.00, null],
+        ['AS90098B', "30'luk Şaft Borusu Dış 3 Metre", $C, '', 2700.00, null],
+        ['AS90099', "27'lik Şaft Borusu İç-Dış 3 Metre", $C, '', 4000.00, null],
+        ['AS90099A', "27'lik Şaft Borusu İç 3 Metre", $C, '', 2000.00, null],
+        ['AS90099B', "27'lik Şaft Borusu Dış 3 Metre", $C, '', 2000.00, null],
+        ['AS90101', "30'luk Frezeli Çatal", $C, '', 1000.00, 'Orijinal No: 10.26.010'],
+        ['AS90102', "30'luk Dış Boru Çatalı", $C, '', 1000.00, 'Orijinal No: 17.06.027'],
+        ['AS90103', "30'luk İç Boru Çatalı", $C, '', 1000.00, 'Orijinal No: 17.06.029'],
+        ['AS90101A', "30X106 Frezeli Çatal", $C, '', 1200.00, null],
+        ['AS90102A', "30X106 Dış Boru Çatalı", $C, '', 1200.00, null],
+        ['AS90103A', "30X106 İç Boru Çatalı", $C, '', 1200.00, null],
+        ['AS90116', "30'luk Üçgen İç Çatal Komple", $C, '', 2750.00, null],
+        ['AS90117', "30'luk Üçgen Dış Çatal Komple", $C, '', 2750.00, null],
+        ['AS90120', "35'lik Üçgen İç Çatal Komple", $C, '', 3700.00, null],
+        ['AS90121', "35'lik Üçgen Dış Çatal Komple", $C, '', 3700.00, null],
+        ['AS90104', "27'lik Frezeli Çatal", $C, '', 750.00, 'Orijinal No: 10.24.010'],
+        ['AS90105', "27'lik İç Boru Çatalı", $C, '', 750.00, 'Orijinal No: 17.04.029'],
+        ['AS90106', "27'lik Dış Boru Çatalı", $C, '', 750.00, 'Orijinal No: 17.04.027'],
+        ['AS90118', "27'lik Üçgen İç Çatal Komple", $C, '', 2600.00, null],
+        ['AS90119', "27'lik Üçgen Dış Çatal Komple", $C, '', 2600.00, null],
+        ['AS90125', "27'lik Kamalı Çatal - Laverda", $C, '', 960.00, null],
+        ['AS90126', "27'lik 21 Frezeli Civata Sıkmalı Çatal - Laverda", $C, '', 960.00, null],
+        ['AS90104A', "24'lük Frezeli Çatal", $C, '', 700.00, null],
+        ['AS90105A', "24'lük İç Boru Çatalı", $C, '', 700.00, null],
+        ['AS90106A', "24'lük Dış Boru Çatalı", $C, '', 700.00, null],
+        ['AS90115', "27'lik Haşbay Cırcır Çatalı", $C, '', 2700.00, 'Orijinal No: 15.04.226'],
+        ['AS90107', "30'luk 6 Frezeli Kayıcılı Çatal", $C, '', 1100.00, 'Orijinal No: 11.06.010'],
+        ['AS90107A', "30'luk 6 Frezeli Civata Sıkmalı Çatal", $C, '', 1100.00, null],
+        ['AS90108', "30'luk 14 Frezeli Kayıcılı Çatal", $C, '', 1100.00, null],
+        ['AS90109', "30'luk 14 Freze Civata Sıkmalı Çatal", $C, '', 1100.00, null],
+        ['AS90110', "30'luk 21 Frezeli Civata Sıkmalı Çatal", $C, '', 1100.00, null],
+        ['AS90111', "30'luk 41 Frezeli Civata Sıkmalı Çatal", $C, '', 1100.00, null],
+        ['AS90124', "30'luk Dişlili Çatal", $C, '', 1200.00, null],
+        ['AS90113', "Oynar Kafa Açılı Şaft Kafası", $C, '', 8250.00, null],
+        ['AS90113A', "Oynar Kafa Açılı Şaft Kafası - Siyah Yerli", $C, '', 6900.00, null],
+        // --- MAFSAL / İSTAVROZ (Della Concordia Ugo, € -> TL) ---
+        ['AS90000', "30'luk Mafsal İstavrozu CR6", $C, '', 793.65, 'Ölçü: 30,20X92'],
+        ['AS90001', "27'lik Mafsal İstavrozu CR4", $C, '', 673.40, 'Ölçü: 27X74,60'],
+        ['AS90002', 'Mafsal İstavrozu CR10', $C, '', 707.07, 'Ölçü: 27X70'],
+        ['AS90003', 'Mafsal İstavrozu CR7', $C, '', 913.90, 'Ölçü: 30X106,5'],
+        ['AS90004', 'Mafsal İstavrozu CR26', $C, '', 1803.75, 'Ölçü: 34X90X51'],
+        ['AS90005', 'Mafsal İstavrozu CR3', $C, '', 711.88, 'Ölçü: 23X84X61,30'],
+        ['AS90006', 'Mafsal İstavrozu CR391', $C, '', 817.70, 'Ölçü: 27X82'],
+        ['AS90007', 'Mafsal İstavrozu CR26 (22X54)', $C, '', 668.59, 'Ölçü: 22X54'],
+        ['AS90008', 'Mafsal İstavrozu CR112', $C, '', 986.05, 'Ölçü: 27X72'],
+        ['AS90009', 'Mafsal İstavrozu CR27', $C, '', 2015.39, 'Ölçü: 36X90'],
+        ['AS90010', 'Mafsal İstavrozu CR373', $C, '', 3112.07, 'Ölçü: 28X106'],
+        ['AS90011', 'Mafsal İstavrozu CR375', $C, '', 3458.39, 'Ölçü: 28,15X71,50'],
+        ['AS90012', 'Mafsal İstavrozu CR145', $C, '', 1779.70, 'Ölçü: 30,17X82'],
+        ['AS90013', 'Mafsal İstavrozu CR237', $C, '', 2813.85, 'Ölçü: 34,92X126'],
+        ['AS90014', 'Mafsal İstavrozu CR357', $C, '', 1623.38, 'Ölçü: 27X71'],
+        ['AS90015', 'Mafsal İstavrozu CR360', $C, '', 2356.90, 'Ölçü: 30X83'],
+        ['AS90016', 'Mafsal İstavrozu CR65', $C, '', 1755.65, 'Ölçü: 30,20X96,80'],
+        ['AS90017', 'Mafsal İstavrozu CR351', $C, '', 2958.15, 'Ölçü: 27,00X81,70'],
+        ['AS90018', 'Mafsal İstavrozu CR334', $C, '', 3198.65, 'Ölçü: 35,00X93,00'],
+        ['AS90020', 'Mafsal İstavrozu CR303', $C, '', 2741.70, 'Ölçü: 30,17X82,00'],
+        ['AS90021', 'Mafsal İstavrozu CR97', $C, '', 2092.35, 'Ölçü: 30,17X92,00'],
+        ['AS90022', 'Mafsal İstavrozu CR22', $C, '', 1779.70, 'Ölçü: 35,00X96,80'],
+        ['AS90023', 'Mafsal İstavrozu CR9', $C, '', 2837.90, 'Ölçü: 41,00X118,00'],
+        ['AS90024', 'Mafsal İstavrozu CR749', $C, '', 1491.10, null],
+        ['AS90025', 'Mafsal İstavrozu CR392', $C, '', 1914.38, 'Ölçü: 27,00X81,70'],
+        // --- AMZ İTHAL MAFSAL / İSTAVROZ (€ -> TL) ---
+        ['AS90000A', "30'luk Mafsal İstavrozu MZ6 (İthal)", $C, '', 505.05, 'Ölçü: 30,20X92'],
+        ['AS90001A', "27'lik Mafsal İstavrozu MZ4 (İthal)", $C, '', 432.90, 'Ölçü: 27X74,60'],
+        ['AS90002A', 'Mafsal İstavrozu MZ10 (İthal)', $C, '', 456.95, 'Ölçü: 27X70'],
+        ['AS90003A', 'Mafsal İstavrozu MZ7 (İthal)', $C, '', 557.96, 'Ölçü: 30X106,5'],
+        ['AS90005A', 'Mafsal İstavrozu MZ3 (İthal)', $C, '', 456.95, 'Ölçü: 28X84X61,30'],
+        ['AS90007A', 'Mafsal İstavrozu MZ2 (İthal)', $C, '', 432.90, 'Ölçü: 22X54'],
+        ['AS90000B', 'Oynar Kafa İstavrozu (İthal)', $C, '', 1082.25, null],
     ]);
 }
