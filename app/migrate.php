@@ -67,6 +67,7 @@ function run_migrations(): void
         29 => ['seed_zincir_2026'],   // Zincir Aksamı ürünleri
         30 => ['seed_burc_2026'],   // Burç Aksamı ürünleri (marka: Gallignani)
         31 => ['seed_saft_2026'],   // Şaft / Çatal / İstavroz / Mafsal ürünleri
+        32 => ["UPDATE products SET stock = 50 WHERE stock <= 0 AND deleted_at IS NULL"],   // Tüm ürünler stokta görünsün
     ];
     $done = $v;
     foreach ($migrations as $ver => $stmts) {
