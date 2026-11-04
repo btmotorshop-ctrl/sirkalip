@@ -68,6 +68,7 @@ function run_migrations(): void
         30 => ['seed_burc_2026'],   // Burç Aksamı ürünleri (marka: Gallignani)
         31 => ['seed_saft_2026'],   // Şaft / Çatal / İstavroz / Mafsal ürünleri
         32 => ["UPDATE products SET stock = 50 WHERE stock <= 0 AND deleted_at IS NULL"],   // Tüm ürünler stokta görünsün
+        33 => ['seed_pumps_2026', "UPDATE products SET stock = 50 WHERE stock <= 0 AND deleted_at IS NULL"],   // Pompa/depo ürünleri + yeni gelenler stokta
     ];
     $done = $v;
     foreach ($migrations as $ver => $stmts) {
@@ -754,5 +755,16 @@ function seed_saft_2026(): void
         ['AS90005A', 'Mafsal İstavrozu MZ3 (İthal)', $C, '', 456.95, 'Ölçü: 28X84X61,30'],
         ['AS90007A', 'Mafsal İstavrozu MZ2 (İthal)', $C, '', 432.90, 'Ölçü: 22X54'],
         ['AS90000B', 'Oynar Kafa İstavrozu (İthal)', $C, '', 1082.25, null],
+    ]);
+}
+
+/** Muhtelif Parçalar: SIR KALIP pompa/depo ürünleri (fiyatlar TL). Depo kodları üretildi, admin'den değiştirilebilir. */
+function seed_pumps_2026(): void
+{
+    sk_seed_products([
+        ['AMZ970705', 'Dıştan Aktarmalı Switch Pompa - Lux Tip 12 Volt', 'muhtelif-parcalar', '', 2250.00, null],
+        ['AMZ970969', 'Mazot Aktarma Pompası - Büyük Boy Süzgeçli 12 Volt', 'muhtelif-parcalar', '', 1250.00, null],
+        ['SKMZT200', '200 LT Mazotmatik Mazot Deposu - 12V Transfer Pompalı', 'muhtelif-parcalar', '', 23000.00, null],
+        ['SKMZT500', '500 LT Mazotmatik Mazot Deposu - 12V Transfer Pompalı', 'muhtelif-parcalar', '', 30000.00, null],
     ]);
 }
