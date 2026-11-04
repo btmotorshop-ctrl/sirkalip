@@ -37,6 +37,7 @@ $pageTitle = !empty($title) ? $title . ' | SIR KALIP' : 'SIR KALIP | ' . L('Baly
 
 <!-- Üst bar -->
 <?php $tg = setting('general', []); $tgTel = preg_replace('/[^\d+]/', '', $tg['phone'] ?? ''); ?>
+<div class="sticky top-0 z-40 shadow-sm" data-sticky-head>
 <div class="bg-ink text-[12px] text-white/90">
   <div class="container-x flex h-9 items-center justify-between gap-4">
     <div class="flex min-w-0 items-center gap-4 sm:gap-5">
@@ -59,7 +60,7 @@ $pageTitle = !empty($title) ? $title . ' | SIR KALIP' : 'SIR KALIP | ' . L('Baly
   </div>
 </div>
 
-<header class="sticky top-0 z-40 border-b border-line bg-white">
+<header class="border-b border-line bg-white">
   <div class="container-x flex h-16 items-center gap-4 md:h-20 md:gap-8">
     <button class="md:hidden" data-open="drawer" aria-label="Menü"><?= icon('menu', 'h-6 w-6') ?></button>
     <?php view('partials/logo', ['tagline' => true]); ?>
@@ -128,6 +129,7 @@ $pageTitle = !empty($title) ? $title . ' | SIR KALIP' : 'SIR KALIP | ' . L('Baly
     </div>
   </nav>
 </header>
+</div>
 
 <!-- Mobil çekmece menü -->
 <div data-drawer class="fixed inset-0 z-50 hidden md:hidden">

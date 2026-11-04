@@ -95,3 +95,9 @@
 [dir=rtl] body{text-align:right;font-family:"Segoe UI",Tahoma,Arial,sans-serif}
 [dir=rtl] .prose-sk ul,[dir=rtl] .prose-sk ol{padding-left:0;padding-right:1.5rem}
 [dir=rtl] input[type=tel],[dir=rtl] input[type=email],[dir=rtl] input[type=number],[dir=rtl] input[name=code]{direction:ltr;text-align:right}
+
+/* Dil secici acilir menu (dropdown) */
+[data-locale-dd]>summary{list-style:none;cursor:pointer;user-select:none}
+[data-locale-dd]>summary::-webkit-details-marker{display:none}
+[data-locale-dd][open]>summary .sk-caret{transform:rotate(180deg)}
+[data-locale-dd] .sk-caret{transition:transform .15s ease}
