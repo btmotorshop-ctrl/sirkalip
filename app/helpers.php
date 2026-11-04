@@ -12,7 +12,7 @@ function base_path(): string
 function locale(): string { return $GLOBALS['LOCALE'] ?? 'tr'; }
 
 /** Sitede kullanılan diller: kod => görünen ad */
-function locales(): array { return ['tr' => 'Türkçe', 'en' => 'English', 'de' => 'Deutsch', 'fr' => 'Français', 'ru' => 'Русский', 'ar' => 'العربية']; }
+function locales(): array { return ['tr' => 'Türkçe', 'en' => 'English', 'el' => 'Ελληνικά', 'de' => 'Deutsch', 'fr' => 'Français', 'ru' => 'Русский', 'ar' => 'العربية']; }
 /** Türkçe dışındaki ek diller (veritabanında *_en, *_de ... sütunları) */
 function extra_locales(): array { return ['en', 'de', 'fr', 'ru', 'ar']; }
 /** Geçiş alanları veritabanında hazır mı (migration 14)? */

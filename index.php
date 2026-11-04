@@ -9,7 +9,7 @@ $path = '/' . trim(rawurldecode($path), '/');
 
 // Dil: /en/, /de/, /fr/, /ru/, /ar/ ... → ilgili dil, diğerleri Türkçe
 $GLOBALS['LOCALE'] = $config['default_locale'];
-if (preg_match('#^/(en|de|fr|ru|ar)(/|$)#', $path, $m)) {
+if (preg_match('#^/(en|de|fr|ru|ar|el)(/|$)#', $path, $m)) {
     $GLOBALS['LOCALE'] = $m[1];
     $path = '/' . trim(substr($path, 3), '/');
 }
